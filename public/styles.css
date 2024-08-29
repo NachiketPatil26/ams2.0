@@ -52,6 +52,8 @@ body {
     padding-top: 7px;
     padding-bottom: 7px;
     transition: 0.5s;
+    justify-content: center;
+    align-items: center;
 }
 
 h1 {

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    table {
+      border-collapse: collapse; /* Ensures borders are drawn between cells */
+      width: 100%; /* Optional: Set a desired table width */
+    }
+    th, td {
+      border: 1px solid black; /* Sets border style and thickness */
+      padding: 5px; /* Optional: Add padding for spacing inside cells */
+    }
+  </style>
+</head>
+<body>
+  <h1>Hello admin</h1>
+
+  <h1>Teachers Data</h1>
+  <table>
+    <tr>
+      <% fields.forEach(field => { %>
+        <th><%= field.name %></th>
+      <% }) %>
+    </tr>
+    <% data.forEach(row => { %>
+      <tr>
+        <% fields.forEach(field => { %>
+          <td><%= row[field.name] %></td>
+        <% }) %>
+      </tr>
+    <% }) %>
+  </table>
+
+  
+
+</body>
+</html>
