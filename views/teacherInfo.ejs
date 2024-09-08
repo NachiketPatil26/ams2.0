@@ -4,37 +4,73 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <!-- Import Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- Import Google Font: Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
+    body {
+      background-color: #121212; /* Dark background */
+      color: #ffffff; /* Light text color for contrast */
+      font-family: 'Poppins', sans-serif; /* Apply Poppins font */
+    }
+    h1 {
+      color: #ffffff; /* Light text for headings */
+    }
     table {
-      border-collapse: collapse; /* Ensures borders are drawn between cells */
-      width: 100%; /* Optional: Set a desired table width */
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 20px; /* Spacing above the table */
     }
     th, td {
-      border: 1px solid black; /* Sets border style and thickness */
-      padding: 5px; /* Optional: Add padding for spacing inside cells */
+      border: 1px solid #444444; /* Darker border color */
+      padding: 10px; /* Increased padding for more spacing */
+      text-align: left; /* Align text to the left */
+    }
+    th {
+      background-color: #1f1f1f; /* Darker background for headers */
+      color: #ffffff; /* Light text for headers */
+    }
+    td {
+      background-color: #2a2a2a; /* Darker background for table cells */
     }
   </style>
 </head>
 <body>
-  <h1>Hello admin</h1>
+  <div class="container">
+    <h1 class="text-center my-4">Hello Admin</h1>
 
-  <h1>Teachers Data</h1>
-  <table>
-    <tr>
-      <% fields.forEach(field => { %>
-        <th><%= field.name %></th>
-      <% }) %>
-    </tr>
-    <% data.forEach(row => { %>
-      <tr>
-        <% fields.forEach(field => { %>
-          <td><%= row[field.name] %></td>
+    <h1 class="text-center my-4">Teachers Data</h1>
+    <table class="table table-dark table-striped">
+      <thead>
+        <tr>
+          <% fields.forEach(field => { %>
+            <th><%= field.name %></th>
+          <% }) %>
+        </tr>
+      </thead>
+      <tbody>
+        <% data.forEach(row => { %>
+          <tr>
+            <% fields.forEach(field => { %>
+              <td><%= row[field.name] %></td>
+            <% }) %>
+          </tr>
         <% }) %>
-      </tr>
-    <% }) %>
-  </table>
+      </tbody>
+    </table>
 
-  
+    <form action="/teacherInfo/addstaff">
+      <input type="submit" class="btn btn-primary" value="Add Staff">
+    </form>
+    <form action="/teacherInfo/delstaff">
+      <input type="submit" class="btn btn-danger" value="Delete Staff">
+    </form>
+  </div>
 
+  <!-- Optional: Bootstrap JS and Popper.js, required for Bootstrap components (like modals) -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

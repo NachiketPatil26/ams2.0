@@ -2,15 +2,17 @@ import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import mysql from "mysql";
+import { render } from "ejs";
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const port = 3000;
 
-
+// Database connection setup
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
@@ -32,15 +34,18 @@ db.connect((err) => {
   }
 });
 
-var adminIsAuthorised = false;
+let adminIsAuthorised = false;
+let teacherIsAuthorised = true; // Placeholder for authorization
+
 function passwordCheckAdmin(req, res, next) {
   const password = req.body["password"];
   const username = req.body["username"];
-if (password === "admin123" && username === "admin") {
+  if (password === "admin123" && username === "admin") {
     adminIsAuthorised = true;
   }
   next();
 }
+
 app.use(passwordCheckAdmin);
 
 // Configure EJS and static file serving
@@ -48,28 +53,38 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
 
-// Define routes
+// Serve the static HTML file for the teacherDashboard route
+app.get("/teacherDashboard", (req, res) => {
+  if (teacherIsAuthorised) {
+    const skydashPath = path.join(__dirname, "views" ,"teacherDashboard.html");
+    res.sendFile(skydashPath, (err) => {
+      if (err) {
+        console.error("Error sending the file:", err);
+        res.status(500).send('Failed to load teacher dashboard.');
+      }
+    });
+  } else {
+    res.render("teacherlogin", { error: "Unauthorized access" });
+  }
+});
+
+
+
+// Other routes
 app.get("/", (req, res) => res.render("about"));
 app.get("/login", (req, res) => res.render("login"));
-app.get("/adminlogin", (req, res) => 
-
-  res.render("adminlogin"));
-
+app.get("/adminlogin", (req, res) => res.render("adminlogin"));
 app.get("/teacherlogin", (req, res) => res.render("teacherlogin"));
 
 app.post("/adminDashboard", (req, res) => {
   if (adminIsAuthorised) {
-    // Query to get the fields and data from your MySQL table
     db.query("SELECT * FROM `teacher info_2`", (err, results) => {
       if (err) {
         console.error("Error retrieving data:", err);
         return res.status(500).send('Database query failed.');
       }
 
-      // Assuming you want to dynamically get field names from the result
       const fields = Object.keys(results[0] || {}).map(name => ({ name }));
-
-      // Pass fields and data to the EJS template
       res.render("adminDashboard", { fields, data: results });
     });
   } else {
@@ -78,29 +93,25 @@ app.post("/adminDashboard", (req, res) => {
   adminIsAuthorised = false; // Reset after checking
 });
 
-app.get("/teacherDashboard", (req, res) => res.render("teacherDashboard"));
-
-var teacherIsAuthorised = true;
 app.get("/teacherInfo", (req, res) => {
   if (teacherIsAuthorised) {
-    // Query to get the fields and data from your MySQL table
     db.query("SELECT * FROM `teacher info_2`", (err, results) => {
       if (err) {
         console.error("Error retrieving data:", err);
         return res.status(500).send('Database query failed.');
       }
 
-      // Assuming you want to dynamically get field names from the result
       const fields = Object.keys(results[0] || {}).map(name => ({ name }));
-
-      // Pass fields and data to the EJS template
       res.render("teacherInfo", { fields, data: results });
     });
   } else {
-    res.render("adminlogin", { error: "Incorrect username or password" });
+    res.render("teacherlogin", { error: "Unauthorized access" });
   }
- 
 });
+
+app.get("/teacherInfo/addstaff", (req, res) => {
+  res.render("editTeacher");
+})
 
 // Error handling middleware
 app.use((err, req, res, next) => {

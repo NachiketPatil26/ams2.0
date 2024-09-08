@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Teacher Information</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container">
+    <h1 class="text-center my-4">Edit Teacher Information</h1>
+    <form action="/teacherInfo/update/<%= teacher.id %>" method="POST">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" name="name" value="<%= teacher.name %>" required>
+      </div>
+      <div class="form-group">
+        <label for="phoneNumber">Phone Number</label>
+        <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" value="<%= teacher.phoneNumber %>" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" id="email" name="email" value="<%= teacher.email %>" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="text" class="form-control" id="password" name="password" value="<%= teacher.password %>" required>
+      </div>
+      <div class="form-group">
+        <label for="confirmation">Confirmation</label>
+        <select class="form-control" id="confirmation" name="confirmation">
+          <option value="confirmed" <%= teacher.confirmation === 'confirmed' ? 'selected' : '' %>>Confirmed</option>
+          <option value="not confirmed" <%= teacher.confirmation === 'not confirmed' ? 'selected' : '' %>>Not Confirmed</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+  </div>
+</body>
+</html>
